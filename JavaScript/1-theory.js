@@ -49,23 +49,17 @@ class Purchase {
 
   visitProduct(product) {
     const available = product.inStock();
-    if (available) {
-      console.log(`Product "${product.name}" is in stock`);
-      this.items.push(product);
-    } else {
-      console.log(`Product "${product.name}" is out of stock`);
-    }
+    const status = (available ? 'in' : 'out of') + ' stock';
+    if (available) this.items.push(product);
+    console.log(`Product "${product.name}" is ${status}`);
   }
 
   visitService(service) {
     const now = new Date();
     const available = service.isAvailableAt(now);
-    if (available) {
-      console.log(`Service "${service.name}" is available`);
-      this.delivery = service;
-    } else {
-      console.log(`Service "${service.name}" is not available`);
-    }
+    const status = (available ? '' : 'not ') + 'available';
+    if (available) this.delivery = service;
+    console.log(`Service "${service.name}" is ${status}`);
   }
 }
 
@@ -82,11 +76,8 @@ class Inspection {
 
   visitProduct(product) {
     const available = product.inStock();
-    if (available) {
-      console.log(`Product "${product.name}" is in stock`);
-    } else {
-      console.log(`Product "${product.name}" is out of stock`);
-    }
+    const status = (available ? 'in' : 'out of') + ' stock';
+    console.log(`Product "${product.name}" is ${status}`);
   }
 
   visitService() {
