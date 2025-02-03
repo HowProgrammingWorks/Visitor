@@ -1,5 +1,7 @@
 'use strict';
 
+// Elements to be visited
+
 class Product {
   constructor(name, price) {
     this.name = name;
@@ -32,6 +34,8 @@ class Service {
     return day > Service.SUNDAY && day < Service.SATURDAY;
   }
 }
+
+// Visitors to be acceped
 
 class Purchase {
   constructor(items, delivery) {
@@ -67,7 +71,7 @@ class Purchase {
 
 class Inspection {
   constructor(items) {
-    this.items = items;
+    this.items = [...items];
   }
 
   check() {
