@@ -9,11 +9,8 @@ class Product {
   }
 
   accept(visitor) {
-    visitor.visit(this, this.inStock());
-  }
-
-  inStock() {
-    return true; // Just a stub
+    const inStock = true; // Just a stub
+    visitor.visit(this, inStock);
   }
 }
 
@@ -26,13 +23,9 @@ class Service {
   }
 
   accept(visitor) {
-    const now = new Date();
-    visitor.visit(this, this.isAvailableAt(now));
-  }
-
-  isAvailableAt(date) {
-    const day = date.getDay();
-    return day > Service.SUNDAY && day < Service.SATURDAY;
+    const day = new Date().getDay();
+    const available = day > Service.SUNDAY && day < Service.SATURDAY;
+    visitor.visit(this, available);
   }
 }
 
@@ -51,19 +44,16 @@ class Purchase {
   visit(item, available) {
     const proto = Object.getPrototypeOf(item);
     const className = proto.constructor.name;
-    if (available) {
-      console.log(`${className} "${item.name}" is available`);
-      if (item instanceof Service) this.delivery = item;
-      else this.items.push(item);
-    } else {
-      console.log(`${className} "${item.name}" is not available`);
-    }
+    const status = `${available ? '' : 'not '}available`;
+    console.log(`${className} "${item.name}" is ${status}`);
+    if (item instanceof Service) this.delivery = item;
+    else this.items.push(item);
   }
 }
 
 class Inspection {
   constructor(items) {
-    this.items = items;
+    this.items = [...items];
   }
 
   check() {
@@ -73,13 +63,8 @@ class Inspection {
   }
 
   visit(item, available) {
-    const proto = Object.getPrototypeOf(item);
-    const className = proto.constructor.name;
-    if (available) {
-      console.log(`${className} "${item.name}" is in stock`);
-    } else {
-      console.log(`${className} "${item.name}" is out of stock`);
-    }
+    const status = `${available ? 'in' : 'out of'} stock`;
+    console.log(`Product "${item.name}" is ${status}`);
   }
 }
 
