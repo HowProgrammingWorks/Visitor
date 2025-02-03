@@ -34,19 +34,18 @@ class Service {
 class Purchase {
   constructor(items, delivery) {
     this.items = [];
-    this.delivery = null;
-    const visit = (item) => (available) => {
-      const proto = Object.getPrototypeOf(item);
-      const className = proto.constructor.name;
+    items.forEach((item) => {
+      item.accept((available) => {
+        const status = `${available ? '' : 'not '}available`;
+        console.log(`Product "${item.name}" is ${status}`);
+        this.items.push(item);
+      });
+    });
+    delivery.accept((available) => {
       const status = `${available ? '' : 'not '}available`;
-      console.log(`${className} "${item.name}" is ${status}`);
-      if (item instanceof Service) this.delivery = item;
-      else this.items.push(item);
-    };
-    for (const item of items) {
-      item.accept(visit(item));
-    }
-    delivery.accept(visit(delivery));
+      console.log(`Service "Delivery" is ${status}`);
+      this.delivery = available ? delivery : null;
+    });
   }
 }
 
@@ -56,13 +55,12 @@ class Inspection {
   }
 
   check() {
-    const visit = (item) => (available) => {
-      const status = `${available ? 'in' : 'out of'} stock`;
-      console.log(`Product "${item.name}" is ${status}`);
-    };
-    for (const item of this.items) {
-      item.accept(visit(item));
-    }
+    this.items.forEach((item) => {
+      item.accept((available) => {
+        const status = `${available ? 'in' : 'out of'} stock`;
+        console.log(`Product "${item.name}" is ${status}`);
+      });
+    });
   }
 }
 

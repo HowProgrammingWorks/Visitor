@@ -3,14 +3,10 @@
 // Elements to be visited
 
 const product = (name, price) => {
-  const instance = {
-    type: 'Product',
-    name,
-    price,
-    accept: (visitor) => {
-      const inStock = true; // Just a stub
-      visitor(instance, inStock);
-    },
+  const instance = { type: 'Product', name, price };
+  instance.accept = (visitor) => {
+    const inStock = true; // Just a stub
+    visitor(instance, inStock);
   };
   return instance;
 };
