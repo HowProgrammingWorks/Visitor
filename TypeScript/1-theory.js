@@ -1,19 +1,17 @@
+'use strict';
+
 // Elements to be visited
 
-interface Availability {
-  accept(visitor: Visitor): void;
-}
+class Product {
+  name;
+  price;
 
-class Product implements Availability {
-  name: string;
-  price: number;
-
-  constructor(name: string, price: number) {
+  constructor(name, price) {
     this.name = name;
     this.price = price;
   }
 
-  accept(visitor: Visitor): void {
+  accept(visitor) {
     visitor.visitProduct(this);
   }
 
@@ -22,21 +20,20 @@ class Product implements Availability {
   }
 }
 
-class Service implements Availability {
-  name: string;
+class Service {
+  name;
+  static SUNDAY = 0;
+  static SATURDAY = 6;
 
-  private static SUNDAY = 0;
-  private static SATURDAY = 6;
-
-  constructor(name: string) {
+  constructor(name) {
     this.name = name;
   }
 
-  accept(visitor: Visitor): void {
+  accept(visitor) {
     visitor.visitService(this);
   }
 
-  isAvailableAt(date: Date) {
+  isAvailableAt(date) {
     const day = date.getDay();
     return day > Service.SUNDAY && day < Service.SATURDAY;
   }
@@ -44,30 +41,25 @@ class Service implements Availability {
 
 // Visitors to be acceped
 
-interface Visitor {
-  visitProduct(product: Product): void;
-  visitService(service: Service): void;
-}
+class Purchase {
+  items = [];
+  delivery = null;
 
-class Purchase implements Visitor {
-  items: Array<Product> = [];
-  delivery: Service | null = null;
-
-  constructor(items: Array<Product>, delivery: Service) {
+  constructor(items, delivery) {
     for (const item of items) {
       this.visitProduct(item);
     }
     this.visitService(delivery);
   }
 
-  visitProduct(product: Product): void {
+  visitProduct(product) {
     const available = product.inStock();
     const status = `${available ? 'in' : 'out of'} stock`;
     console.log(`Product "${product.name}" is ${status}`);
     if (available) this.items.push(product);
   }
 
-  visitService(service: Service): void {
+  visitService(service) {
     const now = new Date();
     const available = service.isAvailableAt(now);
     const status = `${available ? '' : 'not '}available`;
@@ -76,10 +68,10 @@ class Purchase implements Visitor {
   }
 }
 
-class Inspection implements Visitor {
-  items: Array<Product>;
+class Inspection {
+  items;
 
-  constructor(items: Array<Product>) {
+  constructor(items) {
     this.items = items;
   }
 
@@ -89,13 +81,13 @@ class Inspection implements Visitor {
     }
   }
 
-  visitProduct(product: Product): void {
+  visitProduct(product) {
     const available = product.inStock();
     const status = `${available ? 'in' : 'out of'} stock`;
     console.log(`Product "${product.name}" is ${status}`);
   }
 
-  visitService(service: Service): void {
+  visitService(service) {
     if (service) throw new Error('Not implemented');
   }
 }
