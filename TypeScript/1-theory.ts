@@ -80,7 +80,7 @@ class Inspection implements Visitor {
   items: Array<Product>;
 
   constructor(items: Array<Product>) {
-    this.items = items;
+    this.items = [...items];
   }
 
   check() {

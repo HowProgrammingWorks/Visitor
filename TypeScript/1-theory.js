@@ -72,7 +72,7 @@ class Inspection {
   items;
 
   constructor(items) {
-    this.items = items;
+    this.items = [...items];
   }
 
   check() {
