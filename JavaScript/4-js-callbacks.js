@@ -35,17 +35,19 @@ class Purchase {
   constructor(items, delivery) {
     this.items = [];
     items.forEach((item) => {
-      item.accept((available) => {
+      const visit = (available) => {
         const status = `${available ? '' : 'not '}available`;
         console.log(`Product "${item.name}" is ${status}`);
         this.items.push(item);
-      });
+      };
+      item.accept(visit);
     });
-    delivery.accept((available) => {
+    const visit = (available) => {
       const status = `${available ? '' : 'not '}available`;
       console.log(`Service "Delivery" is ${status}`);
       this.delivery = available ? delivery : null;
-    });
+    };
+    delivery.accept(visit);
   }
 }
 
@@ -56,10 +58,11 @@ class Inspection {
 
   check() {
     this.items.forEach((item) => {
-      item.accept((available) => {
+      const visit = (available) => {
         const status = `${available ? 'in' : 'out of'} stock`;
         console.log(`Product "${item.name}" is ${status}`);
-      });
+      };
+      item.accept(visit);
     });
   }
 }
